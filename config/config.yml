@@ -1,0 +1,65 @@
+# 对于哪些域名进行越权漏洞检测，可以写正则表达式，正则re.compile()不通过的会被认为是纯字符串，不含端口
+host:
+  - "localhost"
+  - ".*\\.tmall.com\\.com"
+  - ".*\\.taobao.com"
+  - ".*\\.taobao.com\\.com"
+  - ".*\\.csdn.net"
+  - ".*\\.csdn.net\\"
+  - "127.0.0.1"
+  - "192.168.62.159"
+
+#扫描端口，可正则匹配
+port:
+  - 5888
+  - "1\\d{4}"
+  - ".*"
+
+#配置需要替换的cookie字段
+cookie: "session=eyJ1c2VybmFtZSI6IkJlY291cyJ9.Zx1G9Q.Wdkm4gLeH7_oGli2gc_buSyl3wE"
+#cookie为空时则不进行cookie替换
+#cookie: ""
+
+
+matchreplace:
+  #对所有请求参数进行关键词匹配并替换
+  - {
+      location: "ALL",
+      pattern: "Aecous",
+      replace: "test",
+  }
+#  #对路径进行关键词匹配并替换
+#  - {
+#      location: "PATH",
+#      pattern: "/user/Aecous",
+#      replace: "/user/Becous",
+#  }
+#  #对请求体进行关键词匹配并替换
+#  - {
+#      location: "BODY",
+#      pattern: "114514",
+#      replace: "1919810",
+#  }
+#  #对url进行关键词匹配并替换
+#  - {
+#      location: "URL",
+#      pattern: "Aecous",
+#      replace: "Becous",
+#    }
+  #对header进行关键词匹配并且替换，若不存在该header，则添加
+#  - {
+#      location: "HEADER",
+#      pattern:  "Token:.*" ,
+#      replace:  { name: "Token", value: "test" },
+#    }
+
+
+
+# matchreplace会做替换
+  # pattern可以写正则表达式，如果不能成功执行正则re.compile()则会被认为是纯字符串，，replace则为替换后的字符串（而非正则表达式）
+  # location可以有以下几种选项
+    # URL 对URL做替换
+    # PATH 对PATH路径做替换
+    # HEADER 对请求头做替换，当替换HEADER时，replace为一个对象，name表示对应头部名，value是匹配的头部值的正则
+    # BODY 对POST传输的BODY部分做替换
+    # ALL 全局检测

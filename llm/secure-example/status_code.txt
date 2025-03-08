@@ -1,0 +1,40 @@
+
+request 1 of api 1
+
+GET /api/v1/background/info HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+response body of request 1
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "data":{
+        "status":"on",
+        "password":"98y61283123oindcp",
+        "admin":"background_admin"
+    }
+    "msg":"ok"
+}
+
+request 2 of api 1
+
+GET /api/v1/background/info HTTP/1.1
+Host: example.com
+
+response of request 2
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "data":{
+    }
+    "msg":"no auth"
+}
+
+According to the requests and responses show above, the api return the result with data to the authenticated request and did not disclose any data to the unauthenticated request and show 'no auth' 
+Although the api still return the 200 status code, but the main point is wheather data is disclosed.So you don't need to take status code into consideration.
+So the api is secure.

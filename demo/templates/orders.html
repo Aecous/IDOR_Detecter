@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商城系统 - 订单列表</title>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light grey background */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50; /* Dark blue header */
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin: 20px 0;
+            color: #333;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .list-group {
+            list-style-type: none;
+            padding: 0;
+        }
+        .list-group-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #2d3748;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div><a class="navbar-brand" href="#">商城系统</a></div>
+            <div>
+                <a href="/dashboard">商品列表</a>
+                <a class="active" href="/orders">订单列表</a>
+                <a href="/editpasswd">修改密码</a>
+                <a class="btn" href="/logout">退出登录</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>订单列表</h1>
+        <ul id="order-list" class="list-group"></ul>
+    </div>
+
+    <div id="order-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h5>订单详情</h5>
+            <ul id="order-detail-list" class="list-group"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取订单列表
+            fetch('/api/shop/order/list')
+                .then(response => response.json())
+                .then(orderList => {
+                    const orderListElement = document.getElementById('order-list');
+                    orderListElement.innerHTML = ''; // 清空列表
+
+                    orderList.forEach(order => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        listItem.innerHTML = `
+                            订单ID: ${order.id}
+                            <button class="btn delete-order-btn" data-order-id="${order.id}">删除</button>
+                            <button class="btn order-detail-btn" data-order-id="${order.id}">详情</button>
+                        `;
+                        orderListElement.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error(error));
+
+            // 显示订单详情
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('order-detail-btn')) {
+                    const orderId = event.target.dataset.orderId;
+
+                    fetch(`/api/shop/order/detail?order_id=${orderId}`)
+                        .then(response => response.json())
+                        .then(response => {
+                            if (response.code !== 200) {
+                                alert(response.message);
+                                return;
+                            }
+                            const orderDetailList = document.getElementById('order-detail-list');
+                            orderDetailList.innerHTML = '';
+
+                            for (const key in response.data) {
+                                const listItem = document.createElement('li');
+                                listItem.className = 'list-group-item';
+                                listItem.textContent = `${key}: ${response.data[key]}`;
+                                orderDetailList.appendChild(listItem);
+                            }
+
+                            document.getElementById('order-detail-modal').style.display = 'flex';
+                        })
+                        .catch(error => console.error(error));
+                }
+
+                // 删除订单
+                if (event.target.classList.contains('delete-order-btn')) {
+                    const orderId = event.target.dataset.orderId;
+
+                    fetch('/api/shop/order/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ order_id: orderId }),
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        alert(response.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error(error));
+                }
+            });
+
+            // 关闭模态框
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('order-detail-modal').style.display = 'none';
+            });
+
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('order-detail-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

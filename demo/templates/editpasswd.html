@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./static/index.css">
+    <script src="./static/vue.js"></script>
+    <title>商城系统 - 商品列表</title>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light grey background */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50; /* Dark blue header */
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin: 20px 0;
+            color: #333;
+            font-weight: bold;
+        }
+        h3 {
+            color: #444;
+        }
+
+        .btn {
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #2d3748;
+        }
+
+        #zhong {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 50%;
+            max-width: 500px;
+
+            height: 50%;
+            max-height: 300pax;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #fff;
+            border-radius: 20px
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div><a class="navbar-brand" href="#">商城系统</a></div>
+            <div>
+                <a href="/dashboard">商品列表</a>
+                <a href="/orders">订单列表</a>
+                <a href="/editpasswd">修改密码</a>
+                <a class="btn btn-danger" href="/logout">退出登录</a>
+            </div>
+        </nav>
+    </header>
+    <div id="app">
+        <div id="all">
+            <div id="zhong">
+                <table>
+                    <tr>
+                        <td>
+                        <h1>修改密码</h1>
+                            <el-input v-model="userData.username" placeholder="您的用户名"></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <el-input v-model="userData.password" placeholder="请输入新的密码" show-password></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <el-button type="primary" @click="editpasswd">修改</el-button>
+                            <el-button type="primary" onclick="window.location.href='/dashboard'">返回</el-button>
+                            <p id="message">{{ message }}</p>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./static/axios.min.js"></script>
+    <script src="./static/index.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: function() {
+                return {
+                    visible: false,
+                    userData: {
+                        username: '',
+                        password: '',
+                    },
+                    message: '',
+                };
+            },
+            methods: {
+                editpasswd: function() {
+                    if (!this.userData.username || !this.userData.password) {
+                    alert('用户名和新密码不能为空');
+                    return;
+                }
+
+                axios.post('/api/editpasswd', {
+                    username: btoa(this.userData.username),
+                    password: btoa(this.userData.password),
+                }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                })
+                .then(response => {
+                    this.message = response.data.message;
+                    alert(response.data.message);
+                    if (response.data.message === '修改成功') {
+                        window.location.href='/'
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        this.message = error.response.data.message || '修改失败';
+                    } else if (error.request) {
+                        this.message = '请求未响应，请检查网络连接';
+                    } else {
+                        this.message = error.message;
+                    }
+                });
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

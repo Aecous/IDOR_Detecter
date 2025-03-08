@@ -1,0 +1,48 @@
+
+request: 
+
+POST /api/user/info HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+userId=123
+
+response:
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "user": {
+        "id": 123,
+        "username": "john_doe",
+        "email": "john_doe@example.com",
+        "password":"helloworld260@$"
+    }
+}
+
+request:
+POST /api/user/info HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMxMjM4OTAiLCJuYW1lIjoiVHJ1bXAiLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+userId=123
+
+response: 
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "user": {
+        "id": 123,
+        "username": "john_doe",
+        "email": "john_doe@example.com",
+        "password":"helloworld260@$"
+    }
+}
+
+In this example, the 2 requests has different token. 
+We always assume the request 1's token is admin's and the other is normal user's.
+We also assume the api can be accessed by admin but not normal users.
+So in this case, the api return the same data to two token, means that it can be accessed by normal users.
+So it is vulnerable.
+Attention! Once you deal with requests with different tokens like this, you always make the above 2 assumptions

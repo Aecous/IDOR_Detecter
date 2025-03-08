@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商城系统 - 商品列表</title>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light grey background */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50; /* Dark blue header */
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin: 20px 0;
+            color: #333;
+            font-weight: bold;
+        }
+        h3 {
+            color: #444;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .col {
+            width: 48%;
+        }
+        .list-group {
+            list-style-type: none;
+            padding: 0;
+        }
+        .list-group-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .list-group-item:hover {
+            background-color: #d1e6ff;
+            transform: translateY(-2px);
+        }
+        .btn {
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #2d3748;
+        }
+        #user-balance {
+            font-size: 1.25rem;
+            color: #2f855a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div><a class="navbar-brand" href="#">商城系统</a></div>
+            <div>
+                <a href="/dashboard">商品列表</a>
+                <a href="/orders">订单列表</a>
+                <a href="/editpasswd">修改密码</a>
+                <a class="btn btn-danger" href="/logout">退出登录</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>商品列表</h1>
+        <div class="row">
+            <div class="col">
+                <h3>商品列表</h3>
+                <ul id="product-list" class="list-group"></ul>
+            </div>
+            <div class="col">
+                <h3>当前余额</h3>
+                <p id="user-balance" class="font-weight-bold"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productListElement = document.getElementById('product-list');
+            const userBalanceElement = document.getElementById('user-balance');
+
+            fetch('/api/shop/product/list', { credentials: 'include' })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(product => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        listItem.innerHTML = `
+                            ${product.name} - 价格: ${product.price}元
+                            <a class="btn" href="/checkout?product_id=${product.id}">购买</a>
+                        `;
+                        productListElement.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error(error));
+
+            fetch('/api/user/balance')
+                .then(response => response.json())
+                .then(data => {
+                    userBalanceElement.textContent = '余额：' + data.balance + '元';
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>

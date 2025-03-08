@@ -1,0 +1,47 @@
+Let's see another example:
+
+request 1
+
+GET /api/v1/background/info HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+response body
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "data":{
+        "status":"on",
+        "password":"98y61283123oindcp",
+        "admin":"background_admin"
+    }
+    "msg":"ok"
+}
+
+request 2
+
+GET /api/v1/background/info HTTP/1.1
+Host: example.com
+
+response
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "data":{
+        "status":"on",
+        "password":"98y61283123oindcp",
+        "admin":"background_admin"
+    }
+    "msg":"ok"
+}
+
+
+You can see that the api return specific result to the request without token.
+So the api is vulnerable.
+
+
+

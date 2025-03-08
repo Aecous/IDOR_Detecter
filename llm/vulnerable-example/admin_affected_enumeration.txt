@@ -1,0 +1,46 @@
+Let's see another example:
+
+request 1
+
+GET /api/v1/user/profile?id=81276417824 HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+response body
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "user": {
+        "id": 81276417824,
+        "username": "john_doe",
+        "email": "john_doe@example.com"
+    }
+}
+
+
+request 2
+
+GET /api/v1/user/profile?id=81276417825 HTTP/1.1
+Host: example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+response
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "user": {
+        "id": 81276417825,
+        "username": "Trump",
+        "email": "Trump@example.com"
+    }
+}
+
+You can see that the api return specific result based on the modified param id and return other user's information
+So the api is vulnerable.
+However, If the api is designed for admin to manage the system,it works fine.So in this case it is secure though it's name "/api/v1/user/profile" does not imply it is for admin
+
+

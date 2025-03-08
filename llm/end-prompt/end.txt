@@ -1,0 +1,20 @@
+
+You need to pay attention to the following main points:
+1. whether the 2 requests' tokens are different.
+2. whether the 2 requests' params are different
+3. whether a request has token.
+
+Ok, please check the these apis and reply in 2 parts.
+    Part 1. 
+        Assume the api is designed for admin.
+        If the api is sure to be vulnerable in given cases, you need to reply "Yes,vulnerable"
+        If you are not sure, just reply "Not sure"
+    Part 2. 
+        Assume the api is not designed for admin.
+        If the api is sure to be vulnerable in given cases, you need to reply "Yes,vulnerable"
+        If you are not sure, just reply "Not sure"
+
+
+Attention! You cannot take wheather an api return sensitive user data such as password ,email or name into consideration,because we see it as business-needed.
+After giving the above reply,you also need to give the reason in short words.
+

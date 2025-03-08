@@ -1,0 +1,6 @@
+PyYaml
+mitmproxy
+beautifulsoup4
+requests_raw
+Levenshtein
+openai
